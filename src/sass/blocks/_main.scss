@@ -1,0 +1,28 @@
+.container {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.game {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__board {
+
+        width: 800px;
+        background-color: rgb(47, 117, 53);
+
+        &-dominos {
+            width: 350px;
+            margin: 50px auto;
+            display: grid;
+            grid-template-columns: repeat(14, 25px);
+            grid-template-rows: repeat(7, 100px);
+            gap: 2px 2px;
+        }
+    }
+}
+
