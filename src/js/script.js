@@ -74,6 +74,8 @@ function dominoItemActivity(id) {
             } else {
                 if (checkSum(activeItem, id)) {
                     console.log('YES!');
+                } else {
+                    
                 }
 
             }
