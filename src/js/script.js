@@ -10,7 +10,7 @@ const map = [11,
             31, 32, 33, 
             41, 42, 43, 44, 
             51, 52, 53, 54, 55, 
-            61, 62, 64, 63, 65, 66, 
+            61, 62, 63, 64, 65, 66, 
             71, 72, 73, 74, 75, 76, 77];
 
 function dominoItem(id, firstNum, secondNum, status, set) {
@@ -49,12 +49,6 @@ function shuffle(arr) {
     return arr;
 }
 
-function boardRender() {
-    dominoSet.forEach((item, i) => {
-
-    });
-}
-
 function dominoItemOpen(id) {
     dominoSet[id].open();
     domino[id].classList.remove('down');
@@ -74,12 +68,10 @@ function gameInit() {
     openItems.forEach((item, i) => {
         dominoItemOpen(item);
     });
-    //boardRender();
-    console.log(dominoSet);
 }
 
 function dominoItemActivity(id) {
-    currentItem = dominoSet[id];
+    let currentItem = dominoSet[id];
     if (currentItem.status !== 0) {
         if (!currentItem.active) {
             if (activeItem == -1) {
@@ -100,9 +92,7 @@ function dominoItemActivity(id) {
             activeItem = -1;
             domino[id].classList.remove('active');
         }
-
     }
-    console.log(currentItem);
 }
 
 function removePair(id1, id2) {
@@ -112,11 +102,10 @@ function removePair(id1, id2) {
         if (dominoSet[i].set == false) {
             domino[i].classList.add('hide');
         }
-        // if (canOpen(i)) {
-        //     dominoItemOpen(i);
-        // }
+        if (canOpen(i)) {
+            dominoItemOpen(i);
+        }
     });
-    canOpen(22);
 }
 
 function canOpen(id) {
@@ -125,7 +114,11 @@ function canOpen(id) {
     const t2 = (dominoSet[map.indexOf(pos-10)]) ? dominoSet[map.indexOf(pos-10)].set : false;
     const d1 = (dominoSet[map.indexOf(pos+10)]) ? dominoSet[map.indexOf(pos+10)].set : false;
     const d2 = (dominoSet[map.indexOf(pos+11)]) ? dominoSet[map.indexOf(pos+11)].set : false;
-    console.log(`t1=${t1}, t2=${t2}, d1=${d1}, d2=${d2}`);
+    if ((t1 == false && t2 == false) || (d1 == false && d2 == false)) {
+        return true;
+    } else {
+        return false;
+    }
 }
 
 
