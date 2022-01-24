@@ -1,5 +1,6 @@
 body {
     background-color: rgb(47, 117, 53);
+    background: url('../img/main-bg_1.jpg') center center / cover no-repeat;
 }
 
 .container {
@@ -16,8 +17,6 @@ body {
 
     &__board {
 
-
-        background-color: rgb(47, 117, 53);
         position: relative;
         //overflow: hidden;
 
@@ -32,11 +31,11 @@ body {
 }
 
 .game__title {
-	margin-top: 30px;
-	font-size: 28px;
-	font-weight: 700;
-	color: #fff;
-	text-shadow: 2px 2px 3px #000;
+    margin-top: 30px;
+    font-size: 28px;
+    font-weight: 700;
+    color: #fff;
+    text-shadow: 2px 2px 3px #000;
 }
 
 .firework {
@@ -46,15 +45,18 @@ body {
     left: 0;
     top: 0;
     display: none;
+
     &.hide {
         display: none;
     }
+
     &.show {
         display: block;
     }
 }
 
-.btn-start, .btn-redo {
+.btn-start,
+.btn-redo {
     width: 150px;
     height: 40px;
     font-size: 18px;
@@ -69,4 +71,3 @@ body {
 .buttons {
     z-index: 1000;
 }
-

@@ -212,7 +212,9 @@ function checkWin() {
     });
     if (set.length === 0) {
         return true;
-    } else return false;
+    } else {
+        return false;
+    }
 }
 
 function gameWin() {
@@ -222,6 +224,9 @@ function gameWin() {
     ani = setInterval(() => {
         fireWorkElement(sX, sY);
     }, 1);
+    setTimeout(() => {
+        clearInterval(ani);
+    }, 10000);
 }
 
 function fireWorkElement(maxX, maxY) {
