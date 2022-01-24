@@ -1,11 +1,14 @@
 const board = document.querySelector('.game__board'),
     dominos = board.querySelector('.game__board-dominos'),
     firework = document.querySelector('.firework'),
-    startBtn = document.querySelector('.btn-start');
+    startBtn = document.querySelector('.btn-start'),
+    redoBtn = document.querySelector('.btn-redo');
 
-let ani='';
+let ani = '';
 const domino = [];
 const dominoSet = [];
+let redo = [];
+let opened = [];
 let activeItem = -1;
 const openItems = [0, 21, 22, 23, 24, 25, 26, 27];
 const map = [11,
@@ -26,6 +29,10 @@ startBtn.addEventListener('click', () => {
     gameInit();
 });
 
+redoBtn.addEventListener('click', () => {
+    redoMove();
+});
+
 function dominoItem(id, firstNum, secondNum, status, set) {
     this.id = id;
     this.firstNum = firstNum;
@@ -38,6 +45,9 @@ function dominoItem(id, firstNum, secondNum, status, set) {
     this.value = this.firstNum + this.secondNum;
     this.open = function () {
         this.status = 1;
+    };
+    this.close = function () {
+        this.status = 0;
     };
 }
 
@@ -63,16 +73,25 @@ function shuffle(arr) {
 }
 
 function dominoItemOpen(id) {
-    dominoSet[id].open();
-    domino[id].classList.remove('down');
-    domino[id].classList.add(`open-${dominoSet[id].id}`);
+    if (dominoSet[id].status === 0) {
+        dominoSet[id].open();
+        domino[id].classList.remove('down');
+        domino[id].classList.add(`open-${dominoSet[id].id}`);
+        opened.push(id);
+    }
+}
+
+function dominoItemClose(id) {
+    dominoSet[id].close();
+    domino[id].classList.add('down');
+    domino[id].classList.remove(`open-${dominoSet[id].id}`);
 }
 
 function gameInit() {
     dominos.innerHTML = '';
     firework.innerHTML = '';
     fireworkHide();
-    if(ani !== '') {
+    if (ani !== '') {
         clearInterval(ani);
     }
     for (let i = 0; i < 28; i++) {
@@ -93,6 +112,7 @@ function gameInit() {
     }
     openItems.forEach((item, i) => {
         dominoItemOpen(item);
+        opened = [];
     });
 }
 
@@ -107,9 +127,11 @@ function dominoItemActivity(id) {
             } else {
                 if (checkSum(activeItem, id)) {
                     removePair(activeItem, id);
+                    redo = [];
+                    redo.push(activeItem, id);
+                    console.log(`Redo: ${redo}`);
                     activeItem = -1;
                     let win = checkWin();
-                    console.log(win);
                     if (win) {
                         gameWin();
                     }
@@ -127,6 +149,7 @@ function dominoItemActivity(id) {
 }
 
 function removePair(id1, id2) {
+    opened = [];
     dominoSet[id1].set = false;
     dominoSet[id2].set = false;
     domino.forEach((item, i) => {
@@ -137,6 +160,29 @@ function removePair(id1, id2) {
             dominoItemOpen(i);
         }
     });
+    console.log(`Opened: ${opened}`);
+}
+
+function redoMove() {
+    if (redo.length === 0) {
+        return;
+    }
+    for (let i = 1; i < 3; i++) {
+        let id = redo.pop();
+        dominoSet[id].set = true;
+        domino[id].classList.remove('hide');
+
+        if (dominoSet[id].active) {
+            dominoSet[id].active = false;
+            activeItem = -1;
+            domino[id].classList.remove('active');
+        }
+    }
+    opened.forEach(item => {
+        dominoItemClose(item);
+    });
+    opened = [];
+    redo = [];
 }
 
 function canOpen(id) {
@@ -182,7 +228,6 @@ function fireWorkElement(maxX, maxY) {
     let x = Math.floor(Math.random() * maxX + 1);
     let y = Math.floor(Math.random() * maxY + 1);
     let type = Math.floor(Math.random() * 28);
-    console.log(x, y, type);
     const plate = document.createElement('div');
     plate.classList.add('domino', `open-${type}`);
     plate.setAttribute('data-id', '');
