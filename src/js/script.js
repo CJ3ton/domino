@@ -5,13 +5,19 @@ const board = document.querySelector('.game__board'),
 const dominoSet = [];
 let activeItem = -1;
 const openItems = [0, 21, 22, 23, 24, 25, 26, 27];
-const map = [11, 
-            21, 22, 
-            31, 32, 33, 
-            41, 42, 43, 44, 
-            51, 52, 53, 54, 55, 
-            61, 62, 63, 64, 65, 66, 
-            71, 72, 73, 74, 75, 76, 77];
+const map = [11,
+    21, 22,
+    31, 32, 33,
+    41, 42, 43, 44,
+    51, 52, 53, 54, 55,
+    61, 62, 63, 64, 65, 66,
+    71, 72, 73, 74, 75, 76, 77
+];
+
+dominos.addEventListener('click', (e) => {
+    const id = e.target.dataset.id;
+    dominoItemActivity(id);
+});
 
 function dominoItem(id, firstNum, secondNum, status, set) {
     this.id = id;
@@ -61,7 +67,7 @@ function gameInit() {
     let count = 0;
     for (let i = 1; i < 8; i++) {
         for (let j = 1; j <= i; j++) {
-            dominoSet[count].pos = (i*10 + j);
+            dominoSet[count].pos = (i * 10 + j);
             count++;
         }
     }
@@ -82,8 +88,13 @@ function dominoItemActivity(id) {
                 if (checkSum(activeItem, id)) {
                     removePair(activeItem, id);
                     activeItem = -1;
+                    let win = checkWin();
+                    console.log(win);
+                    if (win) {
+                        gameWin();
+                    }
                 } else {
-                    
+
                 }
 
             }
@@ -110,18 +121,16 @@ function removePair(id1, id2) {
 
 function canOpen(id) {
     const pos = dominoSet[id].pos;
-    const t1 = (dominoSet[map.indexOf(pos-11)]) ? dominoSet[map.indexOf(pos-11)].set : false;
-    const t2 = (dominoSet[map.indexOf(pos-10)]) ? dominoSet[map.indexOf(pos-10)].set : false;
-    const d1 = (dominoSet[map.indexOf(pos+10)]) ? dominoSet[map.indexOf(pos+10)].set : false;
-    const d2 = (dominoSet[map.indexOf(pos+11)]) ? dominoSet[map.indexOf(pos+11)].set : false;
+    const t1 = (dominoSet[map.indexOf(pos - 11)]) ? dominoSet[map.indexOf(pos - 11)].set : false;
+    const t2 = (dominoSet[map.indexOf(pos - 10)]) ? dominoSet[map.indexOf(pos - 10)].set : false;
+    const d1 = (dominoSet[map.indexOf(pos + 10)]) ? dominoSet[map.indexOf(pos + 10)].set : false;
+    const d2 = (dominoSet[map.indexOf(pos + 11)]) ? dominoSet[map.indexOf(pos + 11)].set : false;
     if ((t1 == false && t2 == false) || (d1 == false && d2 == false)) {
         return true;
     } else {
         return false;
     }
 }
-
-
 
 function checkSum(id1, id2) {
     if (dominoSet[id1].value + dominoSet[id2].value === 12) {
@@ -131,9 +140,29 @@ function checkSum(id1, id2) {
     }
 }
 
-dominos.addEventListener('click', (e) => {
-    const id = e.target.dataset.id;
-    dominoItemActivity(id);
-});
+function checkWin() {
+    let set = dominoSet.filter((item) => {
+        return item.set === true;
+    });
+    if (set.length === 0) {
+        return true;
+    } else return false;
+}
+
+function gameWin() {
+    setInterval(fireWork, 10);
+}
+
+function fireWork () {
+    let x = Math.floor(Math.random() * 751);
+        let y = Math.floor(Math.random() * 711);
+        let type = Math.floor(Math.random() * 28);
+        console.log(x, y, type);
+        const plate = document.createElement('div');
+        plate.classList.add('domino', `open-${type}`);
+        plate.setAttribute('data-id', '');
+        plate.style.cssText = `position: absolute; top: ${y}px; left: ${x}px; z-index: 999;`;
+        board.append(plate);
+}
 
 window.addEventListener('DOMContentLoaded', gameInit);
