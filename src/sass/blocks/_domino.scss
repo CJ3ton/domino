@@ -6,6 +6,8 @@
     border: none;
     background: transparent;
     border-radius: 5px;
+    box-shadow: 3px 3px 8px #333;
+    cursor: pointer;
 }
 
 
@@ -280,7 +282,7 @@
 }
 
 .active {
-    box-shadow: 0px 0px 5px 5px #fff;
+    box-shadow: 5px 7px 12px #444;
     transform: scale(1.02);
 }
 
