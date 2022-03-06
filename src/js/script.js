@@ -33,29 +33,33 @@ redoBtn.addEventListener('click', () => {
     redoMove();
 });
 
-function dominoItem(id, firstNum, secondNum, status, set) {
-    this.id = id;
-    this.firstNum = firstNum;
-    this.secondNum = secondNum;
-    this.status = 0;
-    this.set = true;
-    this.canOpen = false;
-    this.rotated = false;
-    this.active = false;
-    this.value = this.firstNum + this.secondNum;
-    this.open = function () {
-        this.status = 1;
-    };
-    this.close = function () {
+class DominoItem {
+    constructor(id, firstNum, secondNum) {
+        this.id = id;
+        this.firstNum = firstNum;
+        this.secondNum = secondNum;
         this.status = 0;
-    };
+        this.set = true;
+        this.canOpen = false;
+        this.rotated = false;
+        this.active = false;
+        this.value = this.firstNum + this.secondNum;
+    }
+
+    open() {
+        this.status = 1;
+    }
+    
+    close() {
+        this.status = 0;
+    }
 }
 
 function createDominoItems() {
     let count = 0;
     for (let i = 0; i < 7; i++) {
         for (let j = i; j < 7; j++) {
-            dominoSet[count] = new dominoItem(count, i, j);
+            dominoSet[count] = new DominoItem(count, i, j);
             count++;
         }
     }
