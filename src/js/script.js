@@ -33,17 +33,19 @@ redoBtn.addEventListener('click', () => {
     redoMove();
 });
 
+// Класс кость домино
+
 class DominoItem {
     constructor(id, firstNum, secondNum) {
-        this.id = id;
-        this.firstNum = firstNum;
-        this.secondNum = secondNum;
-        this.status = 0;
-        this.set = true;
-        this.canOpen = false;
-        this.rotated = false;
-        this.active = false;
-        this.value = this.firstNum + this.secondNum;
+        this.id = id; // Идентификатор
+        this.firstNum = firstNum; // Количество точек на 1 половине
+        this.secondNum = secondNum; // количество точек на 2 половине
+        this.status = 0; // Открыта (точками ввверх) или закрыта (точками вниз)
+        this.set = true; // Находится на поле или нет
+        this.canOpen = false; // Можно ли открыть
+        this.rotated = false; // Поворот кости на 180 градусов, если true
+        this.active = false; // Активность
+        this.value = this.firstNum + this.secondNum; // Сумма точек на обеих половинках
     }
 
     open() {
@@ -55,6 +57,8 @@ class DominoItem {
     }
 }
 
+//Функция создания массива костей (28 штук)
+
 function createDominoItems() {
     let count = 0;
     for (let i = 0; i < 7; i++) {
@@ -64,6 +68,8 @@ function createDominoItems() {
         }
     }
 }
+
+// Функция перемешивания костей
 
 function shuffle(arr) {
     let j, temp;
@@ -76,6 +82,8 @@ function shuffle(arr) {
     return arr;
 }
 
+// Функция открывает (переворачивает точками вверх) кость
+
 function dominoItemOpen(id) {
     if (dominoSet[id].status === 0) {
         dominoSet[id].open();
@@ -85,11 +93,15 @@ function dominoItemOpen(id) {
     }
 }
 
+// Функция закрывает кость (переворачивает точками вниз)
+
 function dominoItemClose(id) {
     dominoSet[id].close();
     domino[id].classList.add('down');
     domino[id].classList.remove(`open-${dominoSet[id].id}`);
 }
+
+// Инициализация игры
 
 function gameInit() {
     dominos.innerHTML = '';
@@ -104,8 +116,8 @@ function gameInit() {
         domino[i].setAttribute('data-id', `${i}`);
         dominos.append(domino[i]);
     }
-    createDominoItems();
-    shuffle(dominoSet);
+    createDominoItems(); // Создаем кости
+    shuffle(dominoSet); // Перемешиваем кости
     let count = 0;
     activeItem = -1;
     for (let i = 1; i < 8; i++) {
@@ -114,11 +126,13 @@ function gameInit() {
             count++;
         }
     }
-    openItems.forEach((item, i) => {
+    openItems.forEach((item, i) => { // Открываем кости, которые изначально открыты
         dominoItemOpen(item);
         opened = [];
     });
 }
+
+// Функция действий с костями (активация при клике на кость, деактивация при повторном клике)
 
 function dominoItemActivity(id) {
     let currentItem = dominoSet[id];
@@ -152,6 +166,8 @@ function dominoItemActivity(id) {
     }
 }
 
+// Функция убирает с поля пару костей
+
 function removePair(id1, id2) {
     opened = [];
     dominoSet[id1].set = false;
@@ -166,6 +182,8 @@ function removePair(id1, id2) {
     });
     console.log(`Opened: ${opened}`);
 }
+
+// Функция отмены хода
 
 function redoMove() {
     if (redo.length === 0) {
@@ -189,6 +207,8 @@ function redoMove() {
     redo = [];
 }
 
+// Функция проверяет, можно ли открыть кость
+
 function canOpen(id) {
     const pos = dominoSet[id].pos;
     const t1 = (dominoSet[map.indexOf(pos - 11)]) ? dominoSet[map.indexOf(pos - 11)].set : false;
@@ -202,6 +222,8 @@ function canOpen(id) {
     }
 }
 
+// Функция проверяет сумму точек пары костей, если равна 12, то возвращает TRUE
+
 function checkSum(id1, id2) {
     if (dominoSet[id1].value + dominoSet[id2].value === 12) {
         return true;
@@ -209,6 +231,8 @@ function checkSum(id1, id2) {
         return false;
     }
 }
+
+// Проверка на выигрыш, если все кости убраны с поля, то победа!
 
 function checkWin() {
     let set = dominoSet.filter((item) => {
@@ -220,6 +244,8 @@ function checkWin() {
         return false;
     }
 }
+
+// Победный фейерверк из костей (заполняет экран костями в случайном порядке)
 
 function gameWin() {
     fireWorkShow();
@@ -233,6 +259,8 @@ function gameWin() {
     }, 10000);
 }
 
+// Функция создает случайную кость и помещает в случайном месте на экране
+
 function fireWorkElement(maxX, maxY) {
     let x = Math.floor(Math.random() * maxX + 1);
     let y = Math.floor(Math.random() * maxY + 1);
@@ -244,14 +272,20 @@ function fireWorkElement(maxX, maxY) {
     firework.append(plate);
 }
 
+// Показывем фейерверк
+
 function fireWorkShow() {
     firework.classList.remove('hide');
     firework.classList.add('show');
 }
 
+// Скрываем фейерверк
+
 function fireworkHide() {
     firework.classList.add('hide');
     firework.classList.remove('show');
 }
+
+// Инициализация игры после загрузки страницы
 
 window.addEventListener('DOMContentLoaded', gameInit);
